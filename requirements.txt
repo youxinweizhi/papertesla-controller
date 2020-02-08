@@ -1,0 +1,5 @@
+picoweb
+pycopy-cpython-uasyncio
+pycopy-logging
+pycopy-uasyncio
+utemplate
