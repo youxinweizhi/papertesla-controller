@@ -5,4 +5,4 @@
 Light controller for Paper Tesla
 """
 
-from . import comms
+from .papertesla import PaperTesla
