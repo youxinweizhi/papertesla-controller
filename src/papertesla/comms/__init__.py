@@ -69,7 +69,9 @@ class BLEController:
             conn_handle, value_handle = data
             self.log.info("incoming data...")
             if conn_handle in self._connections and value_handle == self._handler.rx:
-                self._buffer += self._ble.gatts_read(self._handler.rx)
+                incom_data = self._ble.gatts_read(self._handler.rx)
+                self.log.debug("data: %s" % incom_data)
+                self._buffer += incom_data
                 self.log.info("saved to buffer!")
         return None
 
@@ -90,6 +92,11 @@ class BLEController:
         result = self._buffer[0:sz]
         self._buffer = self._buffer[sz:]
         return result
+
+    def write(self, data):
+        """write data to tx char"""
+        for conn in self._connections:
+            self._ble.gatts_notify(conn, self._handler.tx, data)
 
     def parse(self):
         """read from buffer and convert to string"""
