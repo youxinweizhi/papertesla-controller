@@ -16,6 +16,7 @@ UART_TX = (bluetooth.UUID('6E400003-B5A3-F393-E0A9-E50E24DCCA9E'),
            bluetooth.FLAG_NOTIFY,)
 UART_RX = (bluetooth.UUID('6E400002-B5A3-F393-E0A9-E50E24DCCA9E'),
            bluetooth.FLAG_WRITE,)
+EOT = bytearray('EOT')
 
 # org.bluetooth.characteristic.gap.appearance.xml
 #: generic remote control

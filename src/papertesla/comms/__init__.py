@@ -29,12 +29,13 @@ class BLEController:
         self._ble.irq(handler=self._irq_handler)
         self._connections = set()
         self.name = name
-        self.log = logging.getLogger('BLECtrl')
+        self.log = logging.getLogger('ble')
         self._handler = self._register_services()
         self._buffer = bytearray()
         self._payload = None
         self.on_connect = None
         self.on_disconnect = None
+        self.on_write = None
 
     @property
     def ble(self):
@@ -69,10 +70,12 @@ class BLEController:
             conn_handle, value_handle = data
             self.log.info("incoming data...")
             if conn_handle in self._connections and value_handle == self._handler.rx:
-                incom_data = self._ble.gatts_read(self._handler.rx)
-                self.log.debug("data: %s" % incom_data)
-                self._buffer += incom_data
-                self.log.info("saved to buffer!")
+                data = self._ble.gatts_read(self._handler.rx)
+                if data == C.EOT and self.on_write:
+                    self.log.debug('EOT detected!')
+                    return self.on_write(self.parse())
+                self._buffer += data
+                self.log.debug("saved to buffer!")
         return None
 
     def advertise(self, interval_us=500000):
